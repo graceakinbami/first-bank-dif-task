@@ -1,0 +1,53 @@
+BUG-001 — Wallets can be created with an invalid wallet name
+
+Summary
+The wallet credit API accepts as amount in the request body
+
+Severity
+High
+
+Priority
+High
+
+
+Environment
+Environment: NovaPay deployed API
+
+Base URL: https://novapay-api-yc63.onrender.com
+
+Endpoint: POST /wallets
+
+Authentication: Bearer token
+
+Currency representation: kobo
+
+
+Steps to Reproduce
+
+Send create wallet request with invalid wallet name:
+
+{
+  "ownerName": "' OR '1'='1"
+}
+
+
+Submit the request to:
+
+POST /wallets
+
+Inspect the response body.
+
+Expected Result
+The API should return a 401 error with message invalid wallet name :
+
+Actual Result
+The API returned:
+
+{
+    "id": "ca99ab74-32f7-4d4f-91a1-fcf3f4ac0e92",
+    "ownerName": "' OR '1'='1",
+    "balanceKobo": 0,
+    "createdAtUtc": "2026-09-16T23:55:52.2362537Z"
+}
+
+

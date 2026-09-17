@@ -1,0 +1,55 @@
+BUG-001 — The Transfer endpoints allows transfer within same wallet
+Summary
+The Transfer endpoints allows transfer within same wallet, meaning I can transfer from wallet A to wallet A
+
+Severity
+High
+
+Priority
+High
+
+
+Environment
+Environment: NovaPay deployed API
+
+Base URL: https://novapay-api-yc63.onrender.com
+
+Endpoint: POST /transfers
+
+Authentication: Bearer token
+
+Currency representation: kobo
+
+Headers - Idempotency-Key
+
+
+Steps to Reproduce
+
+Send a transfer request from wallet A to wallet A:
+
+{
+  "fromWalletId": "{{walletA}}",
+  "toWalletId": "{{walletA}}",
+  "amountKobo": 1000
+}
+
+Submit the request to:
+
+POST /transfers
+
+Inspect the response body.
+
+Expected Result
+The API should return an error with error message :You cannot transafer within the same wallet :
+
+Actual Result
+The API returned:
+
+{
+    "title": "Insufficient funds",
+    "status": 422,
+    "detail": "Wallet '643b83f6-7d73-4286-9ea4-d53eb5474af0' has insufficient funds for this transfer.",
+    "instance": "/transfers"
+}
+
+422-Unprocessable entitiy

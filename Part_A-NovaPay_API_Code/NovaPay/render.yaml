@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: novapay-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /swagger/v1/swagger.json
+    envVars:
+      - key: NovaPay__BearerToken
+        generateValue: true

@@ -1,0 +1,68 @@
+BUG-001 — The wallet credit API accepts zero amount
+Summary
+The wallet credit API accepts as amount in the request body
+
+Severity
+High
+
+Priority
+High
+
+
+Environment
+Environment: NovaPay deployed API
+
+Base URL: https://novapay-api-yc63.onrender.com
+
+Endpoint: POST /wallets/:id/credit
+
+Authentication: Bearer token
+
+Currency representation: kobo
+
+
+Steps to Reproduce
+
+Send a transfer request with 0 in the request body:
+
+{
+  "amountKobo": 0
+}
+
+
+
+Submit the request to:
+
+POST /wallets/:id/credit
+
+Inspect the response body.
+
+Expected Result
+The API should return a 401 error with message invalid amount :
+
+Actual Result
+The API returned:
+
+{
+    "id": "643b83f6-7d73-4286-9ea4-d53eb5474af0",
+    "ownerName": "Grace_1789605933735",
+    "balanceKobo": 1000,
+    "createdAtUtc": "2026-09-17T00:45:18.8171882"
+}
+
+
+
+Postman Test
+The following automated assertion can detect the issue:
+
+pm.test("Response time is below 2000ms", () => {
+    pm.expect(pm.response.responseTime).to.be.below(2000);
+});
+
+pm.test("Zero credit is rejected", function () {
+    pm.expect(pm.response.code).to.be.within(400, 499);
+});
+
+pm.test("Server does not return 500", function () {
+    pm.expect(pm.response.code).to.not.eql(500);
+});

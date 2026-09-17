@@ -1,0 +1,2137 @@
+{
+  "info": {
+    "_postman_id": "c38722b2-867f-459a-9540-22b0d487f810",
+    "name": "NOVAPAY QA FINAL",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24483460"
+  },
+  "item": [
+    {
+      "name": "Wallet Flow",
+      "item": [
+        {
+          "name": "Create walletA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const body = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Wallet ID exists\", () => {\r",
+                  "    pm.expect(body.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Owner name is correct\", () => {\r",
+                  "    pm.expect(body.ownerName)\r",
+                  "        .to.eql(pm.environment.get(\"walletAName\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Initial balance is zero\", () => {\r",
+                  "    pm.expect(body.balanceKobo).to.eql(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Created timestamp exists\", () => {\r",
+                  "    pm.expect(body.createdAtUtc).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"walletA\", body.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const names = [\r",
+                  "    \"Collins\",\r",
+                  "    \"Grace\",\r",
+                  "    \"David\",\r",
+                  "    \"Sarah\",\r",
+                  "    \"Michael\",\r",
+                  "    \"Daniel\"\r",
+                  "];\r",
+                  "\r",
+                  "const name = names[Math.floor(Math.random() * names.length)];\r",
+                  "\r",
+                  "pm.environment.set(\"walletAName\", `${name}_A_${Date.now()}`);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ownerName\": \"{{walletAName}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create walletB",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const body = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Wallet ID exists\", () => {\r",
+                  "    pm.expect(body.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Initial balance is zero\", () => {\r",
+                  "    pm.expect(body.balanceKobo).to.eql(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"walletB\", body.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const names = [\r",
+                  "    \"Peter\",\r",
+                  "    \"Blessing\",\r",
+                  "    \"Samuel\",\r",
+                  "    \"Esther\",\r",
+                  "    \"Victor\",\r",
+                  "    \"Amaka\"\r",
+                  "];\r",
+                  "\r",
+                  "const name = names[Math.floor(Math.random() * names.length)];\r",
+                  "\r",
+                  "pm.environment.set(\"walletBName\", `${name}_B_${Date.now()}`);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"ownerName\": \"{{walletBName}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get walletA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var response = pm.response.json();\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Correct wallet returned\", () => {\r",
+                  "    pm.expect(response.id)\r",
+                  "        .to.eql(pm.environment.get(\"walletA\"));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Balance cannot be negative\", () => {\r",
+                  "    pm.expect(response.balanceKobo).to.be.at.least(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Balance is integer kobo\", () => {\r",
+                  "    pm.expect(Number.isInteger(response.balanceKobo)).to.eql(true);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get walletB",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var r = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct wallet returned\", function () {\r",
+                  "    pm.expect(r.id).to.eql(\r",
+                  "        pm.environment.get(\"walletB\")\r",
+                  "    );\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Initial balance is zero\", function () {\r",
+                  "    pm.expect(r.balanceKobo).to.eql(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Balance is integer kobo\", function () {\r",
+                  "    pm.expect(Number.isInteger(r.balanceKobo)).to.eql(true);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletB}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Credit walletA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "const requestBody = JSON.parse(pm.request.body.raw);\r",
+                  "const responseBody = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", () => {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Wallet ID is correct\", function () {\r",
+                  "    pm.expect(responseBody.id)\r",
+                  "        .to.eql(pm.environment.get(\"walletA\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Balance is an integer kobo value\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo).to.be.a(\"number\");\r",
+                  "    pm.expect(Number.isInteger(responseBody.balanceKobo)).to.be.true;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Balance matches credited amount\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo)\r",
+                  "        .to.eql(requestBody.amountKobo);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{IdempotencyKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amountKobo\": 2000\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id/credit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id",
+                "credit"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Credit Validation",
+      "item": [
+        {
+          "name": "Zero Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const requestBody = JSON.parse(pm.request.body.raw);\r",
+                  "\r",
+                  "pm.test(\"Response time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Request amount is zero\", function () {\r",
+                  "    pm.expect(requestBody.amountKobo).to.eql(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Zero credit should be rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is not a successful credit\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountKobo\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id/credit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id",
+                "credit"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const requestBody = JSON.parse(pm.request.body.raw);\r",
+                  "\r",
+                  "pm.test(\"Request amount is negative\", function () {\r",
+                  "    pm.expect(requestBody.amountKobo).to.be.below(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Negative credit is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Negative amount is not accepted\", function () {\r",
+                  "    pm.expect(requestBody.amountKobo).to.be.below(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountKobo\": -10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id/credit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id",
+                "credit"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DecimalKobo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response time is below 2000ms\", () => {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Decimal kobo is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Server does not return 500\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(500);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amountKobo\": 10.50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id/credit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id",
+                "credit"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transfer",
+      "item": [
+        {
+          "name": "SendbalbeforeTransfer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"senderBalanceBefore\", body.balanceKobo);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ReceiverBalBeforeTransfer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"receiverBalanceBefore\", body.balanceKobo);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletB}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Valid A to B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const r = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Transfer ID exists\", function () {\r",
+                  "    pm.expect(r.id).to.be.a(\"string\").and.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Correct source wallet\", function () {\r",
+                  "    pm.expect(r.fromWalletId).to.eql(\r",
+                  "        pm.environment.get(\"walletA\")\r",
+                  "    );\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Correct destination wallet\", function () {\r",
+                  "    pm.expect(r.toWalletId).to.eql(\r",
+                  "        pm.environment.get(\"walletB\")\r",
+                  "    );\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Transfer amount is correct\", function () {\r",
+                  "    pm.expect(r.amountKobo).to.eql(Number(pm.environment.get(\"transferAmount\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Amount is integer kobo\", function () {\r",
+                  "    pm.expect(Number.isInteger(r.amountKobo)).to.eql(true);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Transfer status is Completed\", function () {\r",
+                  "    pm.expect(r.status).to.eql(\"Completed\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"transferId\", r.id);\r",
+                  "\r",
+                  "console.log(\"Transfer:\", r.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": \"{{transferAmount}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Sender",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "\r",
+                  "const senderBefore = Number(\r",
+                  "    pm.environment.get(\"senderBalanceBefore\")\r",
+                  ");\r",
+                  "\r",
+                  "const transferAmount = Number(\r",
+                  "    pm.environment.get(\"transferAmount\")\r",
+                  ");\r",
+                  "\r",
+                  "const expectedSenderBalance = senderBefore - transferAmount;\r",
+                  "\r",
+                  "pm.test(\"Sender wallet returned successfully\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Sender wallet ID is correct\", function () {\r",
+                  "    pm.expect(responseBody.id)\r",
+                  "        .to.eql(pm.environment.get(\"walletA\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Sender balance is correct after transfer\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo)\r",
+                  "        .to.eql(expectedSenderBalance);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Sender balance is an integer kobo value\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo).to.be.a(\"number\");\r",
+                  "    pm.expect(Number.isInteger(responseBody.balanceKobo)).to.be.true;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Sender balance is not negative\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo).to.be.at.least(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Receiver",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "\r",
+                  "const receiverBefore = Number(\r",
+                  "    pm.environment.get(\"receiverBalanceBefore\")\r",
+                  ");\r",
+                  "\r",
+                  "const transferAmount = Number(\r",
+                  "    pm.environment.get(\"transferAmount\")\r",
+                  ");\r",
+                  "\r",
+                  "const expectedReceiverBalance =\r",
+                  "    receiverBefore + transferAmount;\r",
+                  "\r",
+                  "pm.test(\"Receiver wallet returned successfully\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Receiver wallet ID is correct\", function () {\r",
+                  "    pm.expect(responseBody.id)\r",
+                  "        .to.eql(pm.environment.get(\"walletB\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Receiver balance is correct after transfer\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo)\r",
+                  "        .to.eql(expectedReceiverBalance);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Receiver balance is an integer kobo value\", function () {\r",
+                  "    pm.expect(responseBody.balanceKobo).to.be.a(\"number\");\r",
+                  "    pm.expect(Number.isInteger(responseBody.balanceKobo)).to.be.true;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletB}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transfer Validation",
+      "item": [
+        {
+          "name": "Zero Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Zero transfer is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Negative transfer is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": -100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Decimal Kobo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Fractional kobo is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": 10.50\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Same wallet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Self transfer is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletA}}\",\n  \"amountKobo\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Destination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid destination is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Server does not return 500\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(500);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$randomUUID}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"00000000-0000-0000-0000-000000000000\",\n  \"amountKobo\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Insufficient funds",
+      "item": [
+        {
+          "name": "Transfer Above Balance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Insufficient funds are rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Server does not return 500\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(500);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "INSUFFICIENT-001"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": 90001\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Idempotency",
+      "item": [
+        {
+          "name": "GetWalletABal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "\r",
+                  "const responseBody = pm.response.json();\r",
+                  "pm.environment.set(\"walletAIdemBal\", responseBody.balanceKobo);\r",
+                  "pm.test(\"Correct wallet returned\", () => {\r",
+                  "    pm.expect(responseBody.balanceKobo) .to.eql(pm.environment.get(\"walletAIdemBal\"));\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "First Request",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const key = `idem-${Date.now()}-${pm.variables.replaceIn('{{$randomUUID}}')}`;\r",
+                  "\r",
+                  "pm.environment.set(\"idempotencyKeyforidemtest\", key);\r",
+                  "\r",
+                  "console.log(\"Generated Idempotency-Key:\", key);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "const requestBody = JSON.parse(pm.request.body.raw);\r",
+                  "\r",
+                  "pm.test(\"First transfer returns 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Transfer ID exists\", function () {\r",
+                  "    pm.expect(responseBody.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Transfer amount is correct\", function () {\r",
+                  "    pm.expect(responseBody.amountKobo)\r",
+                  "        .to.eql(Number(requestBody.amountKobo));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Transfer is completed\", function () {\r",
+                  "    pm.expect(responseBody.status).to.eql(\"Completed\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"firstTransferId\", responseBody.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKeyforidemtest}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Duplicate Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Replay must not create a second transfer\", function () {\r",
+                  "    pm.expect(responseBody.id)\r",
+                  "        .to.eql(pm.environment.get(\"firstTransferId\"));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKeyforidemtest}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletA}}\",\n  \"toWalletId\": \"{{walletB}}\",\n  \"amountKobo\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Different Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();\r",
+                  "\r",
+                  "console.log(\"Status:\", pm.response.code);\r",
+                  "console.log(\"Response:\", responseBody);\r",
+                  "\r",
+                  "pm.test(\"Response is not an unexpected successful new transaction\", function () {\r",
+                  "    if (pm.response.code === 201) {\r",
+                  "        pm.expect(responseBody.id)\r",
+                  "            .to.eql(pm.environment.get(\"firstTransferId\"));\r",
+                  "    }\r",
+                  "});\r",
+                  "pm.test(\"Different payload with same key is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKeyforidemtest}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromWalletId\": \"{{walletAId}}\",\n  \"toWalletId\": \"{{walletBId}}\",\n  \"amountKobo\": 20\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transfers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify WalletA Bal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const r = pm.response.json();\r",
+                  "\r",
+                  "//const credit = Number(\r",
+                  " //   pm.environment.get(\"walletABalanceAfterCredit\")\r",
+                  "//);\r",
+                  "var credit = Number (pm.environment.get(\"walletAIdemBal\"))\r",
+                  "\r",
+                  "//const normalTransfer = 10;\r",
+                  "const idempotentTransfer = 10;\r",
+                  "\r",
+                  "const expectedBalance =\r",
+                  "    credit - idempotentTransfer;\r",
+                  "\r",
+                  "pm.test(\"Idempotent replay did not debit twice\", function () {\r",
+                  "    pm.expect(r.balanceKobo).to.eql(expectedBalance);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Balance is not negative\", function () {\r",
+                  "    pm.expect(r.balanceKobo).to.be.at.least(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletA}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "item": [
+        {
+          "name": "Invalid Wallet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid wallet ID is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No internal server error\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.eql(500);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{43tdfghj}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Missing Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Missing authentication is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletB}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid authentication is rejected\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "456ytrs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/wallets/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{walletB}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Injection Input",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Request completed without server error\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.below(500);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response does not expose database error\", function () {\r",
+                  "    const responseText = pm.response.text().toLowerCase();\r",
+                  "\r",
+                  "    pm.expect(responseText).to.not.include(\"sql\");\r",
+                  "    pm.expect(responseText).to.not.include(\"syntax error\");\r",
+                  "    pm.expect(responseText).to.not.include(\"database\");\r",
+                  "    pm.expect(responseText).to.not.include(\"sqlite\");\r",
+                  "    pm.expect(responseText).to.not.include(\"postgres\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TestToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ownerName\": \"' OR '1'='1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wallets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wallets"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.test(\"Response time is below 3 seconds\", function () {\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+          "});\r",
+          "\r",
+          "pm.test(\"Response is not an unhandled server error\", function () {\r",
+          "    pm.expect(pm.response.code).to.not.eql(500);\r",
+          "});"
+        ]
+      }
+    }
+  ]
+}
